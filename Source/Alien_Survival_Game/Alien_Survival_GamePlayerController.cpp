@@ -32,6 +32,11 @@ void AAlien_Survival_GamePlayerController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AAlien_Survival_GamePlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AAlien_Survival_GamePlayerController::OnSetDestinationReleased);
 
+	// wasd controls
+	InputComponent->BindAxis("MoveForward", this, &AAlien_Survival_GamePlayerController::MoveForward);
+	InputComponent->BindAxis("MoveRight", this, &AAlien_Survival_GamePlayerController::MoveRight);
+
+
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AAlien_Survival_GamePlayerController::MoveToTouchLocation);
 	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AAlien_Survival_GamePlayerController::MoveToTouchLocation);
@@ -109,4 +114,30 @@ void AAlien_Survival_GamePlayerController::OnSetDestinationReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
+}
+
+void AAlien_Survival_GamePlayerController::MoveForward(float x)
+{
+	APawn* const MyPawn = GetPawn();
+	FVector Direction(1, 0, 0);
+	if (MyPawn && abs(x) > 120.0f) {
+		FVector up = GetPawn()->GetActorLocation();
+		up.X += x;
+		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, up);
+		//AddMovementInput(Direction, x);
+		MyPawn->AddMovementInput(Direction, x);
+	}
+}
+
+void AAlien_Survival_GamePlayerController::MoveRight(float y)
+{
+	APawn* const MyPawn = GetPawn();
+	FVector Direction(0, 1, 0);
+	if (MyPawn && abs(y) > 120.0f) {
+		FVector up = GetPawn()->GetActorLocation();
+		up.Y += y;
+		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, up);
+		//AddMovementInput(Direction, x);
+		MyPawn->AddMovementInput(Direction, y);
+	}
 }

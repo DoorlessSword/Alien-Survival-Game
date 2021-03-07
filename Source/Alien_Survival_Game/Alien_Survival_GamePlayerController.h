@@ -38,6 +38,9 @@ protected:
 	/** Input handlers for SetDestination action. */
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
+
+	void MoveForward(float Value);
+	void MoveRight(float Value);
 };
 
 

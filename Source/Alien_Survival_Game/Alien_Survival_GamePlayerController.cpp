@@ -120,7 +120,7 @@ void AAlien_Survival_GamePlayerController::MoveForward(float x)
 {
 	APawn* const MyPawn = GetPawn();
 	FVector Direction(1, 0, 0);
-	if (MyPawn && abs(x) > 120.0f) {
+	if (MyPawn && abs(x) > 0.0f) {
 		FVector up = GetPawn()->GetActorLocation();
 		up.X += x;
 		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, up);
@@ -133,7 +133,7 @@ void AAlien_Survival_GamePlayerController::MoveRight(float y)
 {
 	APawn* const MyPawn = GetPawn();
 	FVector Direction(0, 1, 0);
-	if (MyPawn && abs(y) > 120.0f) {
+	if (MyPawn && abs(y) > 0.0f) {
 		FVector up = GetPawn()->GetActorLocation();
 		up.Y += y;
 		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, up);

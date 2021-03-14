@@ -39,8 +39,14 @@ protected:
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
 
+	void RotateToMouseCursor();
+
+	/** Moves character based on WASD */
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+
+	bool GetMousePositionOnAimingPlane(FVector& IntersectVector) const;
+	bool GetPlanePositionAtScreenPosition(const FVector2D ScreenPosition, FVector& IntersectVector) const;
 };
 
 

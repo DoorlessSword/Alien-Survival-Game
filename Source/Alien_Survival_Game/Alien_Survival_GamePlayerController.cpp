@@ -6,6 +6,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Alien_Survival_GameCharacter.h"
 #include "Engine/World.h"
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
 AAlien_Survival_GamePlayerController::AAlien_Survival_GamePlayerController()
 {
@@ -116,6 +117,31 @@ void AAlien_Survival_GamePlayerController::OnSetDestinationReleased()
 	bMoveToMouseCursor = false;
 }
 
+void AAlien_Survival_GamePlayerController::RotateToMouseCursor()
+{
+
+	//APawn* const MyPawn = GetPawn();
+
+	// Get current mouse rotation
+	FVector mouseLocation, mouseDirection;
+	this->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
+
+	// Get local reference to the controller's character and its rotation
+	ACharacter* currentChar = this->GetCharacter();
+	FRotator charRotation = currentChar->GetActorRotation();
+
+	// Get the rotation of the mouse direction
+	FRotator targetRotation = mouseDirection.Rotation();
+
+	// Since I only want to turn the character relative to the ground, 
+	// the Yaw is the only change needed.
+	FRotator newRot = FRotator(charRotation.Pitch, targetRotation.Yaw, charRotation.Roll);
+
+	currentChar->SetActorRotation(newRot);
+
+
+}
+
 void AAlien_Survival_GamePlayerController::MoveForward(float x)
 {
 	APawn* const MyPawn = GetPawn();
@@ -123,8 +149,6 @@ void AAlien_Survival_GamePlayerController::MoveForward(float x)
 	if (MyPawn && abs(x) > 0.0f) {
 		FVector up = GetPawn()->GetActorLocation();
 		up.X += x;
-		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, up);
-		//AddMovementInput(Direction, x);
 		MyPawn->AddMovementInput(Direction, x);
 	}
 }
@@ -136,8 +160,48 @@ void AAlien_Survival_GamePlayerController::MoveRight(float y)
 	if (MyPawn && abs(y) > 0.0f) {
 		FVector up = GetPawn()->GetActorLocation();
 		up.Y += y;
-		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, up);
-		//AddMovementInput(Direction, x);
 		MyPawn->AddMovementInput(Direction, y);
 	}
+}
+
+bool AAlien_Survival_GamePlayerController::GetMousePositionOnAimingPlane(FVector& IntersectVector) const
+{
+
+	ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player);
+	bool bHit = false;
+	if (LocalPlayer && LocalPlayer->ViewportClient)
+	{
+		FVector2D MousePosition;
+		if (LocalPlayer->ViewportClient->GetMousePosition(MousePosition))
+		{
+			bHit = GetPlanePositionAtScreenPosition(MousePosition, IntersectVector);
+		}
+	}
+
+	if (!bHit)	//If there was no hit we reset the results. This is redundant but helps Blueprint users
+	{
+		IntersectVector = FVector::ZeroVector;
+	}
+
+	return bHit;
+}
+
+bool AAlien_Survival_GamePlayerController::GetPlanePositionAtScreenPosition(const FVector2D ScreenPosition, FVector& IntersectVector) const
+{
+	// Early out if we clicked on a HUD hitbox
+	// Uncomment when a hud has been made
+	/*if (GetHUD() != NULL && GetHUD()->GetHitBoxAtCoordinates(ScreenPosition, true))
+	{
+		return false;
+	}*/
+
+	FVector WorldOrigin;
+	FVector WorldDirection;
+	if (UGameplayStatics::DeprojectScreenToWorld(this, ScreenPosition, WorldOrigin, WorldDirection) == true)
+	{
+		IntersectVector = FMath::LinePlaneIntersection(WorldOrigin, WorldOrigin + WorldDirection * HitResultTraceDistance, GetPawn()->GetActorLocation(), FVector::UpVector);
+		return true;
+	}
+
+	return false;
 }

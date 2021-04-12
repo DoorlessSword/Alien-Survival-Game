@@ -55,6 +55,25 @@ AAlien_Survival_GameCharacter::AAlien_Survival_GameCharacter()
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+
+
+	//Set up actor material
+	//MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+
+	//static ConstructorHelpers::FObjectFinder<USkeletalMesh> FoundMesh(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
+	//if (FoundMesh.Succeeded()) {
+	//	MeshComp->SetSkeletalMesh(FoundMesh.Object);
+	//}
+
+	//UE_LOG(LogTemp, Warning, TEXT("MeshComp is filled %s"), MeshComp == nullptr);
+	
+	static ConstructorHelpers::FObjectFinder <UMaterial>  FoundMaterial(TEXT("Material'/Game/PlayerMaterial.PlayerMaterial'"));
+	if (FoundMaterial.Succeeded()) {
+		StoredMaterial = FoundMaterial.Object;
+	}
+	DynamicMaterialInst = UMaterialInstanceDynamic::Create(StoredMaterial, MeshComp);
+
+	//MeshComp->SetMaterial(0, DynamicMaterialInst);
 }
 
 void AAlien_Survival_GameCharacter::Tick(float DeltaSeconds)
@@ -85,6 +104,8 @@ void AAlien_Survival_GameCharacter::Tick(float DeltaSeconds)
 			FRotator CursorR = CursorFV.Rotation();
 			CursorToWorld->SetWorldLocation(TraceHitResult.Location);
 			CursorToWorld->SetWorldRotation(CursorR);
+
+			
 		}
 	}
 }

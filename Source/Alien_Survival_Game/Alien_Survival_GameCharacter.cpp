@@ -56,24 +56,10 @@ AAlien_Survival_GameCharacter::AAlien_Survival_GameCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
-
-	//Set up actor material
-	//MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
-
-	//static ConstructorHelpers::FObjectFinder<USkeletalMesh> FoundMesh(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
-	//if (FoundMesh.Succeeded()) {
-	//	MeshComp->SetSkeletalMesh(FoundMesh.Object);
-	//}
-
-	//UE_LOG(LogTemp, Warning, TEXT("MeshComp is filled %s"), MeshComp == nullptr);
+	//set a base health level for the player character
+	InitialHealth = 2000.0f;
+	CharacterHealth = InitialHealth;
 	
-	static ConstructorHelpers::FObjectFinder <UMaterial>  FoundMaterial(TEXT("Material'/Game/PlayerMaterial.PlayerMaterial'"));
-	if (FoundMaterial.Succeeded()) {
-		StoredMaterial = FoundMaterial.Object;
-	}
-	DynamicMaterialInst = UMaterialInstanceDynamic::Create(StoredMaterial, MeshComp);
-
-	//MeshComp->SetMaterial(0, DynamicMaterialInst);
 }
 
 void AAlien_Survival_GameCharacter::Tick(float DeltaSeconds)
@@ -109,3 +95,24 @@ void AAlien_Survival_GameCharacter::Tick(float DeltaSeconds)
 		}
 	}
 }
+
+// Returns starting health
+float AAlien_Survival_GameCharacter::GetInitialHealth()
+{
+	return InitialHealth;
+}
+
+// Returns current health
+float AAlien_Survival_GameCharacter::GetCurrentHealth()
+{
+	return CharacterHealth;
+}
+
+void AAlien_Survival_GameCharacter::UpdateHealth(float HealthChange)
+{
+	CharacterHealth += HealthChange;
+}
+
+
+
+

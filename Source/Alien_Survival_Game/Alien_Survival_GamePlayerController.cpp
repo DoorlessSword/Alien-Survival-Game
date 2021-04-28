@@ -19,12 +19,6 @@ void AAlien_Survival_GamePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	// keep updating the destination every tick while desired
-	/*if (bMoveToMouseCursor)
-	{
-		MoveToMouseCursor();
-	}*/
-
 	RotateToMouseCursor();
 }
 
@@ -33,19 +27,9 @@ void AAlien_Survival_GamePlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	//InputComponent->BindAction("SetDestination", IE_Pressed, this, &AAlien_Survival_GamePlayerController::OnSetDestinationPressed);
-	//InputComponent->BindAction("SetDestination", IE_Released, this, &AAlien_Survival_GamePlayerController::OnSetDestinationReleased);
-
 	// wasd controls
 	InputComponent->BindAxis("MoveForward", this, &AAlien_Survival_GamePlayerController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAlien_Survival_GamePlayerController::MoveRight);
-
-
-	// support touch devices 
-	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AAlien_Survival_GamePlayerController::MoveToTouchLocation);
-	//InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AAlien_Survival_GamePlayerController::MoveToTouchLocation);
-
-	//InputComponent->BindAction("ResetVR", IE_Pressed, this, &AAlien_Survival_GamePlayerController::OnResetVR);
 }
 
 

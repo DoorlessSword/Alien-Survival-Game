@@ -24,11 +24,26 @@ public:
 	/** Returns CursorToWorld subobject **/
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
+	/** Accessor for InitialHealth */
+	UFUNCTION(BlueprintPure, Category = "Power")
+	float GetInitialHealth();
 
-	/** Material and dynamic material to colour the character. **/
-	USkeletalMeshComponent* MeshComp;
-	UMaterial* StoredMaterial;
-	UMaterialInstanceDynamic* DynamicMaterialInst;
+	/** Accesspr for CharacterHealth */
+	UFUNCTION(BlueprintPure, Category = "Power")
+	float GetCurrentHealth();
+
+	/** Function to update character health 
+	*	@param HealthChange This is the amount to change health by. +ve or -ve.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void UpdateHealth(float HealthChange);
+
+protected:
+	
+
+	/** Starting health of character */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float InitialHealth;
 
 private:
 	/** Top down camera */
@@ -42,5 +57,9 @@ private:
 	/** A decal that projects to the cursor location. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UDecalComponent* CursorToWorld;
+
+	/** Current health of character */
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+	float CharacterHealth;
 };
 

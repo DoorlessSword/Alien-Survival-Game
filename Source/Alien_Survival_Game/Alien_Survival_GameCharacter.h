@@ -23,6 +23,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns CursorToWorld subobject **/
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
+	//Returns CollectionSphere subobject
+	FORCEINLINE class USphereComponent* GetCollectionSphere() { return CollectionSphere;  }
 
 	/** Accessor for InitialHealth */
 	UFUNCTION(BlueprintPure, Category = "Power")
@@ -38,12 +40,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void UpdateHealth(float HealthChange);
 
-protected:
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickups", meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* CollectionSphere;
 
+protected:
 	/** Starting health of character */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float InitialHealth;
+
+	// Called when we press a key to collect any pickups inside the CollectionSphere
+	UFUNCTION(BlueprintCallable, Category = "Pickups")
+	void CollectPickups();
 
 private:
 	/** Top down camera */

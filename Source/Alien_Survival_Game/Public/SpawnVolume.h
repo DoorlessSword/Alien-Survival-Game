@@ -24,7 +24,7 @@ public:
 	// Returns the WhereToSpawn subobject
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }
 
-	// REturn random point within BoxComponent
+	// Return random point within BoxComponent
 	UFUNCTION(BlueprintPure, Category = "Spawning")
 	FVector GetRandomPointInVolume();
 

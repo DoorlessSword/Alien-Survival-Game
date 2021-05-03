@@ -26,6 +26,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pickup")
 	void SetActive(bool NewPickupState);
 
+	// Function to call when picked up
+	UFUNCTION(BlueprintNativeEvent)
+	void Collected();
+	virtual void Collected_Implementation();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

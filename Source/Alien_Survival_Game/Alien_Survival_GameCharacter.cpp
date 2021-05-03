@@ -3,6 +3,7 @@
 #include "Alien_Survival_GameCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/DecalComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -11,6 +12,8 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "Pickup.h"
+#include "HealthPickup.h"
 
 AAlien_Survival_GameCharacter::AAlien_Survival_GameCharacter()
 {
@@ -60,6 +63,10 @@ AAlien_Survival_GameCharacter::AAlien_Survival_GameCharacter()
 	InitialHealth = 2000.0f;
 	CharacterHealth = InitialHealth;
 	
+	// Create CollectionSphere
+	CollectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
+	CollectionSphere->SetupAttachment(RootComponent);
+	CollectionSphere->SetSphereRadius(100.0f);
 }
 
 void AAlien_Survival_GameCharacter::Tick(float DeltaSeconds)
@@ -90,10 +97,10 @@ void AAlien_Survival_GameCharacter::Tick(float DeltaSeconds)
 			FRotator CursorR = CursorFV.Rotation();
 			CursorToWorld->SetWorldLocation(TraceHitResult.Location);
 			CursorToWorld->SetWorldRotation(CursorR);
-
-			
 		}
 	}
+
+	CollectPickups();
 }
 
 // Returns starting health
@@ -108,9 +115,53 @@ float AAlien_Survival_GameCharacter::GetCurrentHealth()
 	return CharacterHealth;
 }
 
+// Updates player health when needed
 void AAlien_Survival_GameCharacter::UpdateHealth(float HealthChange)
 {
+	UE_LOG(LogClass, Log, TEXT("current Health is %f"), CharacterHealth)
 	CharacterHealth += HealthChange;
+	UE_LOG(LogClass, Log, TEXT("New Health is %f"), CharacterHealth)
+}
+
+void AAlien_Survival_GameCharacter::CollectPickups()
+{
+	// Get all overlapping actors and store in array
+	TArray<AActor*> CollectedActors;
+	CollectionSphere->GetOverlappingActors(CollectedActors);
+
+	// keep track of collected health
+	float CollectedHealth = 0.0f;
+	
+	// for each actor collected
+	for (int32 iCollected = 0; iCollected < CollectedActors.Num(); ++iCollected) {
+		
+		// Cast the actor to APickup
+		// Cast used this way returns NULLPTR if cannot cast to base Pickup type
+		APickup* const TestPickup = Cast<APickup>(CollectedActors[iCollected]);
+		
+		// If cast successful && pickup is valid and active
+		if (TestPickup && !TestPickup->IsPendingKill() && TestPickup->IsActive()) {
+			// Call pickups Collected function
+			TestPickup->Collected();
+			// Check to see if pickup is health
+			AHealthPickup* const TestHealth = Cast<AHealthPickup>(TestPickup);
+			if (TestHealth) {
+				// increase collected health
+				CollectedHealth += TestHealth->GetHealthAmount();
+			}
+			// Deactivate pickup
+			TestPickup->SetActive(false);
+		}
+			
+	}
+
+	if (CollectedHealth != 0) {
+		//Debug string
+		UE_LOG(LogClass, Log, TEXT("Collected Health is %f"), CollectedHealth)
+		
+		UpdateHealth(CollectedHealth);
+	}
+		
 }
 
 

@@ -18,4 +18,15 @@ class ALIEN_SURVIVAL_GAME_API AHealthPickup : public APickup
 public: 
 	// Sets default values for this actor's properties
 	AHealthPickup();
+
+	// Override the Collected function - use Implementation because its a blueprint native event
+	void Collected_Implementation() override;
+
+	// HealthAmount accessor
+	float GetHealthAmount();
+
+protected:
+	// Set the amount of health the pickup gives to character
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", Meta = (BlueprintProtected = "true"))
+	float HealthAmount;
 };

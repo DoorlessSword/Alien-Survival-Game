@@ -121,6 +121,9 @@ void AAlien_Survival_GameCharacter::UpdateHealth(float HealthChange)
 	UE_LOG(LogClass, Log, TEXT("current Health is %f"), CharacterHealth)
 	CharacterHealth += HealthChange;
 	UE_LOG(LogClass, Log, TEXT("New Health is %f"), CharacterHealth)
+
+	// Call visual effect
+	HealthColourChange();
 }
 
 void AAlien_Survival_GameCharacter::CollectPickups()

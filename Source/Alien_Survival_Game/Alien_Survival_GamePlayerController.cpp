@@ -61,7 +61,7 @@ void AAlien_Survival_GamePlayerController::MoveForward(float x)
 {
 	APawn* const MyPawn = GetPawn();
 	FVector Direction(1, 0, 0);
-	if (MyPawn && abs(x) > 0.0f) {
+	if (MyPawn && FMath::Abs(x) > 0.0f) {
 		FVector up = GetPawn()->GetActorLocation();
 		up.X += x;
 		MyPawn->AddMovementInput(Direction, x);
@@ -72,10 +72,20 @@ void AAlien_Survival_GamePlayerController::MoveRight(float y)
 {
 	APawn* const MyPawn = GetPawn();
 	FVector Direction(0, 1, 0);
-	if (MyPawn && abs(y) > 0.0f) {
+	if (MyPawn && FMath::Abs(y) > 0.0f) {
 		FVector up = GetPawn()->GetActorLocation();
 		up.Y += y;
 		MyPawn->AddMovementInput(Direction, y);
 	}
+}
+
+void AAlien_Survival_GamePlayerController::Disable()
+{
+	DisableInput(Cast<APlayerController>(this));
+}
+
+void AAlien_Survival_GamePlayerController::Enable()
+{
+	EnableInput(Cast<APlayerController>(this));
 }
 

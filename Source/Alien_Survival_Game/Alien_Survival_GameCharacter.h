@@ -43,6 +43,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickups", meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* CollectionSphere;
 
+	
+
 protected:
 	/** Starting health of character */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
@@ -71,5 +73,9 @@ private:
 	/** Current health of character */
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	float CharacterHealth;
+
+	// Timer to respawn character after set time
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+	float RespawnTimer;
 };
 

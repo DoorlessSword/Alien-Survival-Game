@@ -14,6 +14,7 @@
 #include "Engine/World.h"
 #include "Pickup.h"
 #include "HealthPickup.h"
+#include "Alien_Survival_GamePlayerController.h"
 
 AAlien_Survival_GameCharacter::AAlien_Survival_GameCharacter()
 {
@@ -67,6 +68,7 @@ AAlien_Survival_GameCharacter::AAlien_Survival_GameCharacter()
 	CollectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
 	CollectionSphere->SetupAttachment(RootComponent);
 	CollectionSphere->SetSphereRadius(100.0f);
+
 }
 
 void AAlien_Survival_GameCharacter::Tick(float DeltaSeconds)
@@ -115,7 +117,7 @@ float AAlien_Survival_GameCharacter::GetCurrentHealth()
 	return CharacterHealth;
 }
 
-// Updates player health when needed
+// Updates player health when needed. Also kills player when health < 0
 void AAlien_Survival_GameCharacter::UpdateHealth(float HealthChange)
 {
 	UE_LOG(LogClass, Log, TEXT("current Health is %f"), CharacterHealth)
@@ -124,7 +126,24 @@ void AAlien_Survival_GameCharacter::UpdateHealth(float HealthChange)
 
 	// Call visual effect
 	HealthColourChange();
+
+	// Ragdoll and die when health < 0
+	if (CharacterHealth < 0) {
+		// Ragdoll the character
+		USkeletalMeshComponent* CharacterSkeleton = GetMesh();
+		CharacterSkeleton->SetSimulatePhysics(true);
+
+		// Disable input and destroy
+		if (AAlien_Survival_GamePlayerController* PC = Cast<AAlien_Survival_GamePlayerController>(GetController())) {
+			UE_LOG(LogClass, Log, TEXT("Disabling input scope"))
+			PC->Disable();
+		}
+
+		
+	}
 }
+
+
 
 void AAlien_Survival_GameCharacter::CollectPickups()
 {

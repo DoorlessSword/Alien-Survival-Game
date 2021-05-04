@@ -13,6 +13,10 @@ class AAlien_Survival_GameGameMode : public AGameModeBase
 
 public:
 	AAlien_Survival_GameGameMode();
+
+	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void BeginPlay() override;
 };
 
 

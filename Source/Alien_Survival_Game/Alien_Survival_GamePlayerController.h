@@ -14,6 +14,12 @@ class AAlien_Survival_GamePlayerController : public APlayerController
 public:
 	AAlien_Survival_GamePlayerController();
 
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void Disable();
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void Enable();
+
 protected:
 	
 	// Begin PlayerController interface

@@ -10,3 +10,8 @@ AIVision::AIVision()
 AIVision::~AIVision()
 {
 }
+
+bool AIVision::characterVisble()
+{
+return false;
+}

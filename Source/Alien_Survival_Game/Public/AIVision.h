@@ -12,4 +12,8 @@ class ALIEN_SURVIVAL_GAME_API AIVision
 public:
 	AIVision();
 	~AIVision();
+
+	bool characterVisble();
+
+
 };

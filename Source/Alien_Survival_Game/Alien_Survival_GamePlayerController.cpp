@@ -19,7 +19,7 @@ void AAlien_Survival_GamePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	RotateToMouseCursor();
+	RotatdeToMouseCursor();
 }
 
 void AAlien_Survival_GamePlayerController::SetupInputComponent()

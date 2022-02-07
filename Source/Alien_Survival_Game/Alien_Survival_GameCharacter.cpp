@@ -14,6 +14,7 @@
 #include "Engine/World.h"
 #include "Pickup.h"
 #include "HealthPickup.h"
+#include "TimerManager.h"
 #include "Alien_Survival_GamePlayerController.h"
 
 AAlien_Survival_GameCharacter::AAlien_Survival_GameCharacter()
@@ -68,6 +69,7 @@ AAlien_Survival_GameCharacter::AAlien_Survival_GameCharacter()
 	CollectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
 	CollectionSphere->SetupAttachment(RootComponent);
 	CollectionSphere->SetSphereRadius(100.0f);
+
 
 }
 
@@ -129,21 +131,39 @@ void AAlien_Survival_GameCharacter::UpdateHealth(float HealthChange)
 
 	// Ragdoll and die when health < 0
 	if (CharacterHealth < 0) {
-		// Ragdoll the character
-		USkeletalMeshComponent* CharacterSkeleton = GetMesh();
-		CharacterSkeleton->SetSimulatePhysics(true);
-
-		// Disable input and destroy
-		if (AAlien_Survival_GamePlayerController* PC = Cast<AAlien_Survival_GamePlayerController>(GetController())) {
-			UE_LOG(LogClass, Log, TEXT("Disabling input scope"))
-			PC->Disable();
-		}
-
-		
+		Die();
+		CharacterHealth = 0.0f;
 	}
 }
 
+void AAlien_Survival_GameCharacter::Die()
+{
+	this->GetCapsuleComponent()->DestroyComponent();
+	this->GetCharacterMovement()->DisableMovement();
+	this->GetMesh()->SetSimulatePhysics(true);
+	
 
+	GetWorldTimerManager().SetTimer(DestroyTimer, this, &AAlien_Survival_GameCharacter::CallDestroy, 5.0f, false);
+	// Ragdoll the character
+	//USkeletalMeshComponent* CharacterSkeleton = GetMesh();
+	//CharacterSkeleton->SetSimulatePhysics(true);
+
+	// Disable input and destroy
+	//if (AAlien_Survival_GamePlayerController* PC = Cast<AAlien_Survival_GamePlayerController>(GetController())) {
+	//	UE_LOG(LogClass, Log, TEXT("Disabling input scope"))
+	//		PC->Disable();
+
+	//	// Destroy pawn, restart player to spawn and enbale controll again
+	//	if (Destroy()) {
+	//		//PC->ServerRestartPlayer();
+	//		//PC->Enable();
+	//	}
+	//}
+}
+
+void AAlien_Survival_GameCharacter::CallDestroy() {
+	Destroy();
+}
 
 void AAlien_Survival_GameCharacter::CollectPickups()
 {
@@ -185,6 +205,8 @@ void AAlien_Survival_GameCharacter::CollectPickups()
 	}
 		
 }
+
+
 
 
 

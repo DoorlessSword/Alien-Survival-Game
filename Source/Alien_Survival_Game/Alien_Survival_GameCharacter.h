@@ -74,8 +74,12 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	float CharacterHealth;
 
-	// Timer to respawn character after set time
-	UPROPERTY(VisibleAnywhere, Category = "Health")
-	float RespawnTimer;
+	FTimerHandle DestroyTimer;
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void Die();
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void CallDestroy();
 };
 

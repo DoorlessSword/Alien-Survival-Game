@@ -21,6 +21,7 @@ AAlien_Survival_GameGameMode::AAlien_Survival_GameGameMode()
 void AAlien_Survival_GameGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
 }
 
 void AAlien_Survival_GameGameMode::BeginPlay()

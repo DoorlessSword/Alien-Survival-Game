@@ -15,15 +15,25 @@ public:
 	// Sets default values for this character's properties
 	AEnemyAI();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	// Gets SightLine
+	UFUNCTION(BlueprintPure, Category = "SightLine")
+		float GetSightLine();
+
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private:	
+
+	/** Current health of character */
+	UPROPERTY(VisibleAnywhere, Category = "SightLine")
+		float SightLine;
 
 };
